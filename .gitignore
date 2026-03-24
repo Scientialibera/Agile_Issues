@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+*.pyo
 .env
 environment.env
 *.egg-info/
@@ -9,4 +10,4 @@ build/
 venv/
 output/
 *.csv
-.ipynb_checkpoints/
+*.ipynb

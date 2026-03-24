@@ -1,34 +1,32 @@
 # Agile Issue Generator
 
-Azure OpenAI–powered pipeline that generates structured Agile backlogs (Epics → Stories → Subtasks) from natural-language project descriptions, with optional upload to **Jira** or **Azure DevOps**.
+Azure OpenAI-powered pipeline that generates structured Agile backlogs (Epics, Stories, Subtasks) from natural-language project descriptions, with optional upload to **Jira** or **Azure DevOps**.
 
 ## Architecture
 
-Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP-SUMMARIZER): modern OpenAI function calling via `tools` / `tool_choice`, frozen dataclass configuration, exponential-backoff retry, and a FastAPI viewer API.
+Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP-SUMMARIZER): modern OpenAI function calling via `tools` / `tool_choice`, frozen dataclass configuration, exponential-backoff retry, and a FastAPI REST API.
 
 ```
-┌──────────────────┐
-│  Jupyter Notebook │──or──▶ FastAPI API (/api/generate)
-└────────┬─────────┘        └──────┬──────┘
-         │                         │
-    ┌────▼─────────────────────────▼────┐
-    │      Backlog Generator Pipeline    │
-    │  generate → enrich → skills → roles│
-    └────────────────┬──────────────────┘
-                     │
-         ┌───────────▼───────────┐
-         │   Azure OpenAI        │
-         │   (function calling)  │
-         │   tools / tool_choice │
-         └───────────────────────┘
-                     │
-         ┌───────────▼───────────┐
-         │   Output (CSV / JSON) │
-         └───────────┬───────────┘
-                     │
-         ┌───────────▼───────────┐
-         │  Jira  │  Azure DevOps│  (optional upload)
-         └────────┴──────────────┘
+  CLI (main.py)  ──or──  FastAPI API (api/main.py)
+        │                        │
+   ┌────▼────────────────────────▼────┐
+   │     Backlog Generator Pipeline    │
+   │  generate → enrich → skills → roles│
+   └──────────────┬───────────────────┘
+                  │
+      ┌───────────▼───────────┐
+      │     Azure OpenAI       │
+      │   (function calling)   │
+      │   tools / tool_choice  │
+      └───────────────────────┘
+                  │
+      ┌───────────▼───────────┐
+      │   Output (CSV / JSON)  │
+      └───────────┬───────────┘
+                  │
+      ┌───────────▼───────────┐
+      │  Jira  │  Azure DevOps │  (optional upload)
+      └────────┴──────────────┘
 ```
 
 ## What it does
@@ -38,7 +36,7 @@ Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP
 3. **Enriches** each item with detailed Agile-compliant descriptions
 4. Adds **skills** required per work item via function calling
 5. Adds recommended **roles** per work item via function calling
-6. Exports to **CSV** and optionally uploads to **Jira** or **Azure DevOps**
+6. Exports to **CSV / JSON** and optionally uploads to **Jira** or **Azure DevOps**
 
 ## Key patterns (from RFP-SUMMARIZER)
 
@@ -56,7 +54,9 @@ Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP
 ## Project layout
 
 ```
+├── main.py                        # CLI entry point
 ├── app/
+│   ├── __main__.py                # python -m app support
 │   ├── config/
 │   │   └── config.py              # AgileConfig frozen dataclass
 │   ├── core/
@@ -75,7 +75,6 @@ Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP
 ├── deploy/
 │   ├── deploy.config.toml         # Centralized deployment config
 │   └── deploy-infra.ps1           # Azure infrastructure script
-├── Agile_Devops_Jira_Clean.ipynb  # Interactive notebook
 ├── requirements.txt
 ├── environment.env.example
 └── .gitignore
@@ -89,16 +88,45 @@ Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP
    pip install -r requirements.txt
    ```
 3. Copy `environment.env.example` to `environment.env` and fill in your credentials
-4. Run the notebook **or** start the API:
 
-### Notebook
+## Usage
+
+### CLI
+
 ```bash
-jupyter notebook Agile_Devops_Jira_Clean.ipynb
+# Full pipeline: generate + enrich + skills + roles
+python main.py generate --name "my-project" --description "Build a customer portal with SSO, dashboards, and notifications."
+
+# Read description from a file
+python main.py generate --name "my-project" --file project_brief.txt
+
+# Skip enrichment for faster output (structure only)
+python main.py generate --name "my-project" --description "..." --no-enrich --no-skills --no-roles
+
+# Generate and also save as JSON
+python main.py generate --name "my-project" --description "..." --json
+
+# Generate and upload to Jira
+python main.py generate --name "my-project" --description "..." --upload jira --project-key PROJ
+
+# Generate and upload to Azure DevOps
+python main.py generate --name "my-project" --description "..." --upload devops
+
+# Use a TOML config file instead of .env
+python main.py --config config.toml generate --name "my-project" --description "..."
+
+# Verbose logging
+python main.py -v generate --name "my-project" --description "..."
 ```
 
-### API
+### FastAPI Server
+
 ```bash
-python -m uvicorn api.main:app --reload
+# Start the API server
+python main.py serve
+
+# With auto-reload for development
+python main.py serve --reload --port 8000
 ```
 
 Then call:
@@ -109,6 +137,12 @@ curl -X POST http://localhost:8000/api/generate \
     "project_name": "my-project",
     "project_description": "Build a customer portal with SSO, dashboards, and notifications."
   }'
+```
+
+### Module invocation
+
+```bash
+python -m app generate --name "my-project" --description "..."
 ```
 
 ## API endpoints
