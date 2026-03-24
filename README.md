@@ -4,7 +4,7 @@ Azure OpenAI-powered pipeline that generates structured Agile backlogs (Epics, S
 
 ## Architecture
 
-Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP-SUMMARIZER): modern OpenAI function calling via `tools` / `tool_choice`, frozen dataclass configuration, exponential-backoff retry, and a FastAPI REST API.
+Built with modern OpenAI function calling (`tools` / `tool_choice`), frozen dataclass configuration, exponential-backoff retry, and a FastAPI REST API.
 
 ```
   CLI (main.py)  ──or──  FastAPI API (api/main.py)
@@ -38,7 +38,7 @@ Uses the same patterns as [RFP-SUMMARIZER](https://github.com/Scientialibera/RFP
 5. Adds recommended **roles** per work item via function calling
 6. Exports to **CSV / JSON** and optionally uploads to **Jira** or **Azure DevOps**
 
-## Key patterns (from RFP-SUMMARIZER)
+## Key patterns
 
 | Pattern | Implementation |
 |---------|---------------|
