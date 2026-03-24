@@ -19,8 +19,9 @@ temperature = 0.5
 dir = "./output"
 
 [jira]
-id = ""                                   # Jira email / username
-key = ""                                  # Jira API token
+domain = ""                               # Atlassian subdomain (https://<domain>.atlassian.net)
+email = ""                                # Jira account email
+api_token = ""                            # Jira API token
 
 [devops]
 organization = ""                         # Azure DevOps org name

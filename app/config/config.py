@@ -27,8 +27,9 @@ class AgileConfig:
     temperature: float
     output_dir: str
 
-    jira_id: str
-    jira_key: str
+    jira_domain: str
+    jira_email: str
+    jira_api_token: str
 
     devops_organization: str
     devops_project: str
@@ -55,8 +56,9 @@ class AgileConfig:
             reasoning_effort=os.environ.get("REASONING_EFFORT", "medium"),
             temperature=float(os.environ.get("TEMPERATURE", "0.5")),
             output_dir=os.environ.get("OUTPUT_DIR", "./output"),
-            jira_id=os.environ.get("JIRA_ID", ""),
-            jira_key=os.environ.get("JIRA_KEY", ""),
+            jira_domain=os.environ.get("JIRA_DOMAIN", ""),
+            jira_email=os.environ.get("JIRA_EMAIL", os.environ.get("JIRA_ID", "")),
+            jira_api_token=os.environ.get("JIRA_API_TOKEN", os.environ.get("JIRA_KEY", "")),
             devops_organization=os.environ.get("DEVOPS_ORGANIZATION", ""),
             devops_project=os.environ.get("DEVOPS_PROJECT", ""),
             devops_pat=os.environ.get("DEVOPS_PAT", ""),
@@ -80,8 +82,9 @@ class AgileConfig:
             reasoning_effort=azure.get("reasoning_effort", "medium"),
             temperature=azure.get("temperature", 0.5),
             output_dir=output.get("dir", "./output"),
-            jira_id=jira.get("id", ""),
-            jira_key=jira.get("key", ""),
+            jira_domain=jira.get("domain", ""),
+            jira_email=jira.get("email", ""),
+            jira_api_token=jira.get("api_token", ""),
             devops_organization=devops.get("organization", ""),
             devops_project=devops.get("project", ""),
             devops_pat=devops.get("pat", ""),

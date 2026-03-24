@@ -172,8 +172,9 @@ Fill in `deploy/deploy.config.toml` and run:
 | `CHAT_ENGINE` | Yes | Model deployment name |
 | `OPENAI_API_VERSION` | No | API version (default: `2025-01-01-preview`) |
 | `USE_AZURE_AD_AUTH` | No | Use DefaultAzureCredential instead of API key |
-| `JIRA_ID` | No | Jira email for upload |
-| `JIRA_KEY` | No | Jira API token |
+| `JIRA_DOMAIN` | No | Atlassian subdomain (`https://<domain>.atlassian.net`) |
+| `JIRA_EMAIL` | No | Jira account email |
+| `JIRA_API_TOKEN` | No | Jira API token |
 | `DEVOPS_ORGANIZATION` | No | Azure DevOps org for upload |
 | `DEVOPS_PROJECT` | No | Azure DevOps project |
 | `DEVOPS_PAT` | No | Azure DevOps PAT |

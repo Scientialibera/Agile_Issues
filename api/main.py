@@ -1,21 +1,14 @@
 from __future__ import annotations
 
 import logging
-import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.config.config import AgileConfig
-from app.core.backlog_generator import (
-    add_roles,
-    add_skills,
-    enrich_descriptions,
-    generate_backlog,
-    run_pipeline,
-)
+from app.core.backlog_generator import generate_backlog, run_pipeline
 from app.integrations.jira_client import JiraClient
 from app.integrations.devops_client import DevOpsClient
 
@@ -106,7 +99,7 @@ def generate_backlog_only(req: GenerateRequest):
 def upload_to_jira(req: JiraUploadRequest):
     """Upload issues to Jira."""
     config = _load_config()
-    if not config.jira_id or not config.jira_key:
+    if not config.jira_domain or not config.jira_api_token:
         raise HTTPException(status_code=400, detail="Jira credentials not configured")
 
     import pandas as pd
