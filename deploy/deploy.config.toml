@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────
+# Agile Issue Generator – Deployment Configuration
+# Modeled after the RFP-SUMMARIZER deployment pattern.
+# ─────────────────────────────────────────────────────────────
+
+[azure]
+subscription_id = ""                      # Leave empty to use current az login context
+location = "eastus2"
+endpoint = ""                             # Azure OpenAI endpoint URL
+model = ""                                # Deployment name (e.g. gpt-4o, gpt-5-mini)
+api_key = ""                              # API key (leave empty if using Azure AD auth)
+api_version = "2025-01-01-preview"
+use_azure_ad_auth = false
+reasoning_model = false
+reasoning_effort = "medium"
+temperature = 0.5
+
+[output]
+dir = "./output"
+
+[jira]
+id = ""                                   # Jira email / username
+key = ""                                  # Jira API token
+
+[devops]
+organization = ""                         # Azure DevOps org name
+project = ""                              # DevOps project name
+pat = ""                                  # Personal Access Token
+
+[naming]
+prefix = "agile-issues"
+resource_group = ""                       # Empty = rg-<prefix>
+storage_account = ""                      # Empty = st<prefix>
+openai_account = ""                       # Empty = aoai-<prefix>
+container_app = ""                        # Empty = api-<prefix>
+acr_name = ""                             # Empty = acr<prefix>
+
+[webapp]
+deploy_webapp = true
+min_replicas = 0
+max_replicas = 1

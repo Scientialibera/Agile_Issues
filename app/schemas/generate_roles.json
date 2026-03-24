@@ -1,0 +1,18 @@
+{
+  "name": "generate_roles",
+  "description": "Generate a list of IT roles that could deliver the requirements of a specific Agile work item.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "roles": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "IT roles whose expertise is needed to deliver this work item."
+      }
+    },
+    "required": ["roles"],
+    "additionalProperties": false
+  }
+}

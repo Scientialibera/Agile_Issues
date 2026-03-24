@@ -1,0 +1,39 @@
+{
+  "name": "generate_backlog",
+  "description": "Generate a structured Agile backlog of Epics, Stories, and Subtasks from a project description. Each issue includes a title, description, parent reference, and type.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "issues": {
+        "type": "array",
+        "description": "Ordered list of Agile work items forming the project backlog.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Short, descriptive title for the work item."
+            },
+            "description": {
+              "type": "string",
+              "description": "Agile-compliant description (50 words max). Epics describe business value, Stories describe user-facing behavior, Subtasks describe implementation steps."
+            },
+            "parent": {
+              "type": ["string", "null"],
+              "description": "Title of the parent work item. Null for Epics."
+            },
+            "type": {
+              "type": "string",
+              "enum": ["Epic", "Story", "Subtask"],
+              "description": "Agile work item type."
+            }
+          },
+          "required": ["title", "description", "parent", "type"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": ["issues"],
+    "additionalProperties": false
+  }
+}
